@@ -91,4 +91,7 @@ https://duckduckgo.com/?t=ffab&q=get+github+actions+run+status&ia=web
 
 okay, back to making it use my container image inside the ubuntu runner vm (?!)
 -------------------
+https://stackoverflow.com/a/76432348 sigh..
 
+ah, but this may help
+https://gist.github.com/NeodymiumFerBore/2a0af2cf6e208bcc36a22124877c91b6
