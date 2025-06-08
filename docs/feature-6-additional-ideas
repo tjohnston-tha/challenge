@@ -29,10 +29,10 @@
   - and then adjust the dependent jobs etc to match..?
 
 ## Deliver Higher Quality Software
-- Extend the vulnerability scanning part with other concepts
+- Extend the vulnerability scanning part with other typical job types
   - Linting
   - Unit testing
-  - Other testing (SAST DAST etc..?)
+  - Other testing (browser automation, SAST, DAST etc..?)
 - Check/decide on the pinned versions of used actions
   - Some are "@v4", others are some commit SHA repeate from GHA docs examples
   - Pin these to some known/agreed upon list of versions *from outside this repo* via some env vars gathered at runtime? Hmm..

@@ -75,7 +75,7 @@ let's find vulns, build+bundle js, package the appimage and send a notification
 several jobs written, now let's clean them up..
 x need to make sure to use my container image
 x capture artifacts (dist and package)
-- add more info to notification / send it somewhere like email
+x add more info to notification / send it somewhere like email
 
 -------------------------
 the basic stuff is working, but i'm chasing a couple obvious nice-to-haves:
@@ -97,3 +97,6 @@ ah, but this may help
 https://gist.github.com/NeodymiumFerBore/2a0af2cf6e208bcc36a22124877c91b6
 
 see the more organized feature 6 notes file as well.
+--------------------
+last piece is making the workflow trigger between the CI pipeline and the notification
+(which uses the ntfy.sh public instance as well)
