@@ -39,3 +39,8 @@
 
 ## Ease the onboarding of new developers
 
+## All of the above
+- Learn how to use https://github.com/nektos/act to spin through testing some changes locally before pushing
+  - Shorten my own pre-commit loop
+  - Less resources used on runner/etc infra as a result
+  - Onboarding of new developers *of the CI pipeline* can make use of it too if the setup etc is documented/automated

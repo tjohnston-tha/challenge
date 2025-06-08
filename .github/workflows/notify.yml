@@ -16,3 +16,11 @@ jobs:
     steps:
       - run: echo "This build's CI URL is ${{ env.CI_BUILD_URL }}."
       - run: echo "The CI workflow's status was ${{ github.event.workflow_run.conclusion}}."
+      - name: ntfy-failed-notifications
+        uses: niniyas/ntfy-action@master
+        with:
+          url: 'https://ntfy.sh'
+          topic: '${{ secrets.NTFY_TOPIC }}'
+          tags: action
+          details: "Workflow status was ${{ github.event.workflow_run.conclusion}}"
+          actions: 'default'
