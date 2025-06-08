@@ -51,9 +51,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - run: npm install
       - run: npm audit --json | jq '.vulnerabilities[] | select (.severity == "high" or .severity == "critical")' > audit-results.json
       - run: npm run electronegativity
-      # Grab audit-results.json and electronegativity-results.csv as artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-bundle
+          path: |
+            audit-results.json
+            electronegativity-results.csv
   build-and-bundle:
     runs-on: ubuntu-latest
     permissions:
@@ -67,7 +73,10 @@ jobs:
       - run: npm install
       - run: npm run build --if-present
       - run: tar czvf bundled.tar.gz dist
-      # Grab bundled.tar.gz as an artifact
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-bundle
+          path: bundled.tar.gz
   package-appimage:
     runs-on: ubuntu-latest
     permissions:
@@ -78,9 +87,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - run: npm install
       - run: npm run package
       - run: tar czvf packaged.tar.gz package
-      # Grab packaged.tar.gz as an artifact
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appimage-package
+          path: packaged.tar.gz
   send-notification:
     runs-on: ubuntu-latest
     steps:

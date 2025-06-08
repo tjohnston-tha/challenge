@@ -72,4 +72,8 @@ https://docs.github.com/en/actions/writing-workflows/quickstart
 now we have an image built and pushed
 let's find vulns, build+bundle js, package the appimage and send a notification
 
+several jobs written, now let's clean them up..
+- need to make sure to use my container image
+x capture artifacts (dist and package)
+- add more info to notification / send it somewhere like email
 
