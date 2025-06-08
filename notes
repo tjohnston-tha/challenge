@@ -16,12 +16,12 @@ then I tried to run the built result from within the container and remembered th
 https://unix.stackexchange.com/questions/330366/how-can-i-run-a-graphical-application-in-a-container-under-wayland#359244
 for later (running within the container under wayland)
 e.g.
-docker run --rm -ti -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR -e WAYLAND_DISPLAY=$WAYLAND_DISPLAY --user (id -u):(id -g) -v .:/th -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY --name nts node-electron-deps:latest bash
+`docker run --rm -ti -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR -e WAYLAND_DISPLAY=$WAYLAND_DISPLAY --user (id -u):(id -g) -v .:/th -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY --name nts node-electron-deps:latest bash`
 
 which doesn't quite work but perhaps would if I did a bit more fiddling..
 
 in any case, it runs fine outside the container after building inside :}
-
+----------------------
 now, how about vulnerabilities/dependency scanning?
 it prints something during the `npm install`.. is that all we want or is there another way?
 
@@ -30,15 +30,15 @@ it prints something during the `npm install`.. is that all we want or is there a
 https://stackoverflow.com/questions/50314082/how-to-check-for-only-high-vulnerabilities-when-using-npm-audit
 which lead me to this
 https://github.com/npm/npm/issues/20596
+seems like a dead end, also lots of people suggest grepping `audit` output but it's not foolproof (e.g. if package names have "high" in them etc)
 
 let's just use jq to find what we want instead of error-prone grepping
 
 `npm audit --json | jq '.vulnerabilities[] | select (.severity == "high")'`
-(this may be ugly jq but I don't use it super regularly, apologies!)
+seems to work
 
-should also run electronegativity too
+-> should also run electronegativity too (mentioned in the README)
 changed the package.json to give output in csv format so I can grab it more easily without all the prettyprinting/fanciness
-
 ------------
 so now I know how to do almost everything, let's make CI do it..
 - build+bundle: npm install and tar c
