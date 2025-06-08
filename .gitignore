@@ -1,3 +1,5 @@
 node_modules
 dist
 package
+
+yarn.lock # Newer npm version's `install` changes the file in a 'purely decorative' way (order/punctuation but not the contents of fields)
