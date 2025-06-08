@@ -77,3 +77,16 @@ several jobs written, now let's clean them up..
 x capture artifacts (dist and package)
 - add more info to notification / send it somewhere like email
 
+-------------------------
+the basic stuff is working, but i'm chasing a couple obvious nice-to-haves:
+
+- name each workflow run after the commit message rather than the PR name
+
+- carry forward state between jobs (node_modules and dist to avoid wasteful redundant steps)
+https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
+-> something about this is not working as expected.. leave it for later and note as one of the observations
+
+- get the status of the workflow itself (not individual jobs) for use in the notification
+https://duckduckgo.com/?t=ffab&q=get+github+actions+run+status&ia=web
+
+okay, back to making it use my image instead of the stock ubuntu

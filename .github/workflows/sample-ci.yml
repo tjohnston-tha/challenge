@@ -70,21 +70,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Download npm install state
-        uses: actions/download-artifact@v4
-        with:
-          name: npm-install-state
+      - run: npm install
       - run: npm run build --if-present
       - run: tar czvf bundled.tar.gz dist
       - uses: actions/upload-artifact@v4
         with:
           name: build-bundle
           path: bundled.tar.gz
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build-bundle-state
-          path: |
-            dist
   package-appimage:
     runs-on: ubuntu-latest
     needs: build-and-bundle
@@ -94,14 +86,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Download npm install state
-        uses: actions/download-artifact@v4
-        with:
-          name: npm-install-state
-      - name: Download bundle state
-        uses: actions/download-artifact@v4
-        with:
-          name: build-bundle-state
+      - run: npm install
+      - run: npm run build --if-present
       - run: npm run package
       - run: tar czvf packaged.tar.gz package
       - uses: actions/upload-artifact@v4
