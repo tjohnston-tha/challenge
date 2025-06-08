@@ -18,6 +18,24 @@
 
 # Additional ideas to improve what I have presented here:
 
-- As mentioned above:
-  - Carry workspace state forward correctly between dependent jobs
+## Deliver Faster
+- As mentioned above, carry workspace state forward between dependent jobs within the main workflow
+- Cache some of the stuff we download / use a local package server near the runner
+  - node packages
+  - actions? (need to learn more about how this works behind the scenes)
+  - deb package dependencies and container base image
+- Don't always rebuild the container image
+  - Something like `changed: Dockerfile` as in GitlabCI?
+  - and then adjust the dependent jobs etc to match..?
+
+## Deliver Higher Quality Software
+- Extend the vulnerability scanning part with other concepts
+  - Linting
+  - Unit testing
+  - Other testing (SAST DAST etc..?)
+- Check/decide on the pinned versions of used actions
+  - Some are "@v4", others are some commit SHA repeate from GHA docs examples
+  - Pin these to some known/agreed upon list of versions *from outside this repo* via some env vars gathered at runtime? Hmm..
+
+## Ease the onboarding of new developers
 
