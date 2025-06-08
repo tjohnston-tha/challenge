@@ -48,5 +48,23 @@ so now I know how to do almost everything, let's make CI do it..
 - package+run: npm run package and grab the result package/ path as artifacts
   - all? some? just the appimage?
 - containerize the build: build from my dockerfile, run the above inside a container made from the result image
+-------------
+created a new gh account
+set up ssh pubkey
 
+created blank repo, pushed up what i had already
 
+actions>build docker image (gives a template actions yaml to begin with)
+
+push that to a new branch, make a PR, watch the first run to see the image get built..
+
+> naming to docker.io/library/electron-builder:1749400218 done
+(default label in the yaml is a unix timestamp)
+
+this creates the image but doesn't push it anywhere
+
+fortunately we can push to ghcr.io using this other canned yaml:
+https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-docker-images
+
+and see here for other actions-related docs in general:
+https://docs.github.com/en/actions/writing-workflows/quickstart
