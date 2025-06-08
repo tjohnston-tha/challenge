@@ -25,4 +25,15 @@ in any case, it runs fine outside the container after building inside :}
 now, how about vulnerabilities/dependency scanning?
 it prints something during the `npm install`.. is that all we want or is there another way?
 
+`npm outdated`
+`npm audit --audit-level <high/critical>` doesn't do what I expected, that lead me to this
+https://stackoverflow.com/questions/50314082/how-to-check-for-only-high-vulnerabilities-when-using-npm-audit
+which lead me to this
+https://github.com/npm/npm/issues/20596
+
+let's just use jq to find what we want instead of error-prone grepping
+
+`npm audit --json | jq '.vulnerabilities[] | select (.severity == "high")'`
+(this may be ugly jq but I don't use it super regularly, apologies!)
+
 
