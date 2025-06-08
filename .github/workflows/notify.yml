@@ -1,0 +1,16 @@
+# Based on the first reply here: https://stackoverflow.com/q/73798925
+name: Status Notification
+
+on:
+  workflow_run:
+    workflows: ["CI pipeline"]
+
+permissions:
+  actions: read
+  contents: read
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This build's CI URL is ${{ env.CI_BUILD_URL }}."
+      - run: echo "The CI workflow's status was ${{ github.event.workflow_run.conclusion}}."

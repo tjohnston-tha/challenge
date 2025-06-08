@@ -1,4 +1,4 @@
-name: Sample CI pipeline
+name: CI pipeline
 
 on:
   push:

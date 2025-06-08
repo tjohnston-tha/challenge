@@ -1,0 +1,23 @@
+# Observations gathered from my other notes:
+
+- Began by learning the electron/npm related commands (preparing what CI jobs would need to do)
+-> Pretty straightforward. Briefly went down a tangent into running the packaged electron app inside a container and connecting my wayland desktop (abandoned this).
+
+- I'm fairly new to using GHA (have a little bit of experience with Gitea's Actions system)
+- It seems a bit raw/'batteries not included' in a few places
+  - Needing to explicitly checkout/clone the repository using a downloaded action
+  - Being unable to use `env` in the `container:` stanza (`image` field), see comment related to a workaround I found in the workflow yml file
+  - Made two clumsy attempts at carrying workspace state forward between dependent jobs (maybe just need to read more / learn the best way)
+    - Goal was to only `npm install` or `npm build` once
+    - The official docs on the yaml syntax for this are a bit lacking
+    - Abandoned this, as a result I `npm install` wastefully in the bundle and package jobs (and `npm build` wastefully in the package job)
+
+- I wasn't sure exactly what to put in the container image, so I included a group of packages that I installed in order to do my initial electron/npm explorations
+  - This is larger than the set of needed packages: it's enough to build electron itself from source (and then carry out the rest of these steps)
+  - But it's also enough to run the electron app from the container (if we set aside extra wayland issues!)
+
+# Additional ideas to improve what I have presented here:
+
+- As mentioned above:
+  - Carry workspace state forward correctly between dependent jobs
+
