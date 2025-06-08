@@ -41,7 +41,7 @@ seems to work
 changed the package.json to give output in csv format so I can grab it more easily without all the prettyprinting/fanciness
 ------------
 so now I know how to do almost everything, let's make CI do it..
-- build+bundle: npm install and tar c
+- build+bundle: npm install/run build and tar c
 - notification: ???figure it out when we get there
 - find vulns: as above audit|jq
   - include it in the notification!
@@ -68,3 +68,8 @@ https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/pu
 
 and see here for other actions-related docs in general:
 https://docs.github.com/en/actions/writing-workflows/quickstart
+--------------
+now we have an image built and pushed
+let's find vulns, build+bundle js, package the appimage and send a notification
+
+
