@@ -73,7 +73,7 @@ now we have an image built and pushed
 let's find vulns, build+bundle js, package the appimage and send a notification
 
 several jobs written, now let's clean them up..
-- need to make sure to use my container image
+x need to make sure to use my container image
 x capture artifacts (dist and package)
 - add more info to notification / send it somewhere like email
 
@@ -89,4 +89,6 @@ https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow
 - get the status of the workflow itself (not individual jobs) for use in the notification
 https://duckduckgo.com/?t=ffab&q=get+github+actions+run+status&ia=web
 
-okay, back to making it use my image instead of the stock ubuntu
+okay, back to making it use my container image inside the ubuntu runner vm (?!)
+-------------------
+
