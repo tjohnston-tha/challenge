@@ -1,0 +1,98 @@
+name: CI pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  CI_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+      # Credit to https://gist.github.com/NeodymiumFerBore/2a0af2cf6e208bcc36a22124877c91b6 for this way
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+  vulnerability-scan:
+    runs-on: ubuntu-latest
+    container: ${{ needs.build-and-push-image.outputs.image_tag }}
+    needs: build-and-push-image
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - run: npm install
+      - run: npm audit --json | jq '.vulnerabilities[] | select (.severity == "high" or .severity == "critical")' > audit-results.json
+      - run: npm run electronegativity
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vuln-reports
+          path: |
+            audit-results.json
+            electronegativity-results.csv
+  build-and-bundle:
+    runs-on: ubuntu-latest
+    container: ${{ needs.build-and-push-image.outputs.image_tag }}
+    needs: [vulnerability-scan, build-and-push-image]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - run: npm install
+      - run: npm run build --if-present
+      - run: tar czvf bundled.tar.gz dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-bundle
+          path: bundled.tar.gz
+  package-appimage:
+    runs-on: ubuntu-latest
+    container: ${{ needs.build-and-push-image.outputs.image_tag }}
+    needs: [build-and-bundle, build-and-push-image]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - run: npm install
+      - run: npm run build --if-present
+      - run: npm run package
+      - run: tar czvf packaged.tar.gz package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appimage-package
+          path: packaged.tar.gz

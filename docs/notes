@@ -41,12 +41,62 @@ seems to work
 changed the package.json to give output in csv format so I can grab it more easily without all the prettyprinting/fanciness
 ------------
 so now I know how to do almost everything, let's make CI do it..
-- build+bundle: npm install and tar c
+- build+bundle: npm install/run build and tar c
 - notification: ???figure it out when we get there
 - find vulns: as above audit|jq
   - include it in the notification!
 - package+run: npm run package and grab the result package/ path as artifacts
   - all? some? just the appimage?
 - containerize the build: build from my dockerfile, run the above inside a container made from the result image
+-------------
+created a new gh account
+set up ssh pubkey
 
+created blank repo, pushed up what i had already
 
+actions>build docker image (gives a template actions yaml to begin with)
+
+push that to a new branch, make a PR, watch the first run to see the image get built..
+
+> naming to docker.io/library/electron-builder:1749400218 done
+(default label in the yaml is a unix timestamp)
+
+this creates the image but doesn't push it anywhere
+
+fortunately we can push to ghcr.io using this other canned yaml:
+https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-docker-images
+
+and see here for other actions-related docs in general:
+https://docs.github.com/en/actions/writing-workflows/quickstart
+--------------
+now we have an image built and pushed
+let's find vulns, build+bundle js, package the appimage and send a notification
+
+several jobs written, now let's clean them up..
+x need to make sure to use my container image
+x capture artifacts (dist and package)
+x add more info to notification / send it somewhere like email
+
+-------------------------
+the basic stuff is working, but i'm chasing a couple obvious nice-to-haves:
+
+- name each workflow run after the commit message rather than the PR name
+
+- carry forward state between jobs (node_modules and dist to avoid wasteful redundant steps)
+https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow
+-> something about this is not working as expected.. leave it for later and note as one of the observations
+
+- get the status of the workflow itself (not individual jobs) for use in the notification
+https://duckduckgo.com/?t=ffab&q=get+github+actions+run+status&ia=web
+
+okay, back to making it use my container image inside the ubuntu runner vm (?!)
+-------------------
+https://stackoverflow.com/a/76432348 sigh..
+
+ah, but this may help
+https://gist.github.com/NeodymiumFerBore/2a0af2cf6e208bcc36a22124877c91b6
+
+see the more organized feature 6 notes file as well.
+--------------------
+last piece is making the workflow trigger between the CI pipeline and the notification
+(which uses the ntfy.sh public instance as well)
