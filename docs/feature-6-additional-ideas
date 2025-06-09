@@ -50,6 +50,7 @@
 ## Ease the onboarding of new developers
 - Adjust notifications / multiple workflow triggering
   - See note above re: https://stackoverflow.com/a/65698892 default branch only behaviour
+  - Currently the notification workflow won't run pushes to a non-default branch or a PR (so this misses a lot of important cases)
 - Enhance notifications / add other forms of feedback
   - Bot-driven comments in PRs? (re: vulnerability reports/gated build stages described above)
 
