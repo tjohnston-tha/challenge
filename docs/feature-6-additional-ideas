@@ -1,4 +1,4 @@
-# Observations gathered from my other notes:
+# Observations gathered from my other notes
 
 - Began by learning the electron/npm related commands (preparing what CI jobs would need to do)
 -> Pretty straightforward. Briefly went down a tangent into running the packaged electron app inside a container and connecting my wayland desktop (abandoned this).
@@ -11,12 +11,13 @@
     - Goal was to only `npm install` or `npm build` once
     - The official docs on the yaml syntax for this are a bit lacking
     - Abandoned this, as a result I `npm install` wastefully in the bundle and package jobs (and `npm build` wastefully in the package job)
+  - Workflow triggering only works on the default branch perhaps? https://stackoverflow.com/a/65698892
 
 - I wasn't sure exactly what to put in the container image, so I included a group of packages that I installed in order to do my initial electron/npm explorations
   - This is larger than the set of needed packages: it's enough to build electron itself from source (and then carry out the rest of these steps)
   - But it's also enough to run the electron app from the container (if we set aside extra wayland issues!)
 
-# Additional ideas to improve what I have presented here:
+# Additional ideas to improve what I have presented here
 
 ## Deliver Faster
 - As mentioned above, carry workspace state forward between dependent jobs within the main workflow
@@ -24,23 +25,36 @@
   - node packages
   - actions? (need to learn more about how this works behind the scenes)
   - deb package dependencies and container base image
-- Don't always rebuild the container image
-  - Something like `changed: Dockerfile` as in GitlabCI?
+  - actions has a first-class `caches` concept (and GH has its `packages` concept) that may help with these
+- Do not rebuild the container image on every run
+  - Something like `changed: Dockerfile` as in GitlabCI? (on:push:paths?)
+    - https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#example-including-and-excluding-paths
   - and then adjust the dependent jobs etc to match..?
+- Define the container image more carefully
+  - I bet it can be much smaller/quicker to (re)build even if we built it infrequently
 
 ## Deliver Higher Quality Software
 - Extend the vulnerability scanning part with other typical job types
   - Linting
   - Unit testing
   - Other testing (browser automation, SAST, DAST etc..?)
+- Use dependabot or other bot/agent maintenance tools
+- Strengthen the "security posture" of the pipeline
+  - e.g. if we have critical vulnerabilities introduced by a change, do not build/deploy certain stages, notify the developer instead, etc
 - Check/decide on the pinned versions of used actions
   - Some are "@v4", others are some commit SHA repeate from GHA docs examples
   - Pin these to some known/agreed upon list of versions *from outside this repo* via some env vars gathered at runtime? Hmm..
+- Use the container image build 'attestations' mechanism recommended in the docs
+  - Left this out originally because I had the repo set to private (and attestations cannot be used in that case)
 
 ## Ease the onboarding of new developers
+- Adjust notifications / multiple workflow triggering
+  - See note above re: https://stackoverflow.com/a/65698892 default branch only behaviour
+- Enhance notifications / add other forms of feedback
+  - Bot-driven comments in PRs? (re: vulnerability reports/gated build stages described above)
 
 ## All of the above
-- Learn how to use https://github.com/nektos/act to spin through testing some changes locally before pushing
+- Learn how to use https://github.com/nektos/act to test actions changes locally before pushing
   - Shorten my own pre-commit loop
   - Less resources used on runner/etc infra as a result
   - Onboarding of new developers *of the CI pipeline* can make use of it too if the setup etc is documented/automated

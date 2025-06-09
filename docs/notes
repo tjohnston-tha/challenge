@@ -100,3 +100,6 @@ see the more organized feature 6 notes file as well.
 --------------------
 last piece is making the workflow trigger between the CI pipeline and the notification
 (which uses the ntfy.sh public instance as well)
+
+-> it does work on the default branch (because the workflow_run triggering only works there, sigh..)
+
